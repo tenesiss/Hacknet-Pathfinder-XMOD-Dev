@@ -31,14 +31,11 @@ C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\PathfinderAPI.dll
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\SemanticVersioning.dll
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Mono.Cecil.dll
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\0Harmony.dll
-C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\AlienFXManagedWrapper3.5.dll
-C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Steamworks.NET.dll
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\BepInEx.Core.xml
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\BepInEx.Hacknet.pdb
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\FNA.dll.config
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\MonoMod.Utils.xml
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\0Harmony.xml
-C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Steamworks.NET.dll.config
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\obj\Debug\PortsPlus.csproj.CoreCompileInputs.cache
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\obj\Debug\PortsPlus.csproj.CopyComplete
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\obj\Debug\XMOD.dll
@@ -47,4 +44,4 @@ C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\ICSharpCode.SharpZipLib.d
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Lucene.Net.dll
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Lucene.Net.pdb
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Lucene.Net.xml
-C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Hacknet.exe
+C:\Users\bauti_2\source\repos\XMOD\PortsPlus\obj\Debug\PortsPlus.csprojAssemblyReference.cache
