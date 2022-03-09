@@ -9,7 +9,7 @@ namespace HacknetPluginTemplate
     [BepInPlugin(ModGUID, ModName, ModVer)]
     public class XMOD : HacknetPlugin
     {
-        public const string ModGUID = "com.Windows10CE.Template";
+        public const string ModGUID = "tenesiss.XMOD";
         public const string ModName = "XMOD";
         public const string ModVer = "1.0.0";
         private List<string> textArr = new List<string>();
