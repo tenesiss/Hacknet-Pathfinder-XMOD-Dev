@@ -169,6 +169,7 @@ namespace HacknetPluginTemplate
 
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileDeletion>("FileDeleted");
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileCreation>("FileCreated");
+            Pathfinder.Action.ActionManager.RegisterAction<SendEmailAction>("SendMail");
             return true;
         }
     }
