@@ -72,6 +72,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\CmdRun.cs" />
+    <Compile Include="Actions\ConditionFileCreation.cs" />
+    <Compile Include="Actions\ConditionFileDeletion.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Executables\EnBreak.cs" />
     <Compile Include="Executables\EncypherExe.cs" />

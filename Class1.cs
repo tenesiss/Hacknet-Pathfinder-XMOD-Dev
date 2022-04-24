@@ -166,6 +166,9 @@ namespace HacknetPluginTemplate
             // mkfile args: ["filename", '"hello', "i'm", "robert", '"'] - at least a prototype
             Pathfinder.Command.CommandManager.RegisterCommand("mkfile", mkfileRun);
             Pathfinder.Command.CommandManager.RegisterCommand("mkdir", mkdirRun);
+
+            Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileDeletion>("FileDeleted");
+            Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileCreation>("FileCreated");
             return true;
         }
     }
