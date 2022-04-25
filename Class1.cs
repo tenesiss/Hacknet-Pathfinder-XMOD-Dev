@@ -153,6 +153,7 @@ namespace HacknetPluginTemplate
         }
         public override bool Load()
         {
+            Console.WriteLine("tset");
             // Load/Register Executables
             LoadExe();
             // Load/Register Ports
@@ -163,12 +164,15 @@ namespace HacknetPluginTemplate
             Pathfinder.Mission.GoalManager.RegisterGoal<FileCreationGoal>("filecreation");
 
             Pathfinder.Action.ActionManager.RegisterAction<CmdRunAction>("CmdRun");
+            Pathfinder.Action.ActionManager.RegisterAction<AddPoints>("AddPoints");
+            Pathfinder.Action.ActionManager.RegisterAction<RemovePoints>("RemovePoints");
             // mkfile args: ["filename", '"hello', "i'm", "robert", '"'] - at least a prototype
             Pathfinder.Command.CommandManager.RegisterCommand("mkfile", mkfileRun);
             Pathfinder.Command.CommandManager.RegisterCommand("mkdir", mkdirRun);
 
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileDeletion>("FileDeleted");
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileCreation>("FileCreated");
+            Pathfinder.Action.ConditionManager.RegisterCondition<ConditionHasPoints>("HasPoints");
             Pathfinder.Action.ActionManager.RegisterAction<SendEmailAction>("SendMail");
             return true;
         }

@@ -71,9 +71,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\AddPoints.cs" />
     <Compile Include="Actions\CmdRun.cs" />
     <Compile Include="Actions\ConditionFileCreation.cs" />
     <Compile Include="Actions\ConditionFileDeletion.cs" />
+    <Compile Include="Actions\ConditionHasPoints.cs" />
+    <Compile Include="Actions\RemovePoints.cs" />
     <Compile Include="Actions\SendEmail.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Executables\EnBreak.cs" />
@@ -87,6 +90,8 @@
     <Compile Include="Executables\SocketCrackExe.cs" />
     <Compile Include="Goals\FileCreationGoal.cs" />
     <Compile Include="Pathfinder\Game.cs" />
+    <Compile Include="PointsManager.cs" />
+    <Compile Include="PointsPlaceholder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Executables\TXCrackExe.cs" />
     <Compile Include="Executables\VersionCrackExe.cs" />
