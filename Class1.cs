@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Hacknet;
+using HarmonyLib;
 using Hacknet;
 using System;
 using System.Collections.Generic;
@@ -151,6 +152,7 @@ namespace HacknetPluginTemplate
                 }
             }
         }
+
         public override bool Load()
         {
             Console.WriteLine("tset");
@@ -161,8 +163,9 @@ namespace HacknetPluginTemplate
 
             // == COMMAND LOAD ===
 
-            Pathfinder.Mission.GoalManager.RegisterGoal<FileCreationGoal>("filecreation");
+            
 
+            Pathfinder.Mission.GoalManager.RegisterGoal<FileCreationGoal>("filecreation");
             Pathfinder.Action.ActionManager.RegisterAction<CmdRunAction>("CmdRun");
             Pathfinder.Action.ActionManager.RegisterAction<AddPoints>("AddPoints");
             Pathfinder.Action.ActionManager.RegisterAction<RemovePoints>("RemovePoints");
@@ -173,6 +176,8 @@ namespace HacknetPluginTemplate
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileDeletion>("FileDeleted");
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileCreation>("FileCreated");
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionHasPoints>("HasPoints");
+            Pathfinder.Action.ConditionManager.RegisterCondition<HasFlagsNew>("HasFlags");
+            Pathfinder.Action.ConditionManager.RegisterCondition<DoesNotHaveFlagsNew>("DoesNotHaveFlags");
             Pathfinder.Action.ActionManager.RegisterAction<SendEmailAction>("SendMail");
             return true;
         }

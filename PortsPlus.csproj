@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=2.5.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="BepInEx.Core, Version=6.0.0.423, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hacknet\BepInEx\core\BepInEx.Core.dll</HintPath>
@@ -46,6 +50,9 @@
     <Reference Include="Hacknet">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hacknet\Hacknet.exe</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="HacknetPathfinder">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hacknet\HacknetPathfinder.exe</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -73,12 +80,17 @@
   <ItemGroup>
     <Compile Include="Actions\AddPoints.cs" />
     <Compile Include="Actions\CmdRun.cs" />
+    <Compile Include="Actions\ConditionalFileCopied.cs" />
     <Compile Include="Actions\ConditionFileCreation.cs" />
     <Compile Include="Actions\ConditionFileDeletion.cs" />
     <Compile Include="Actions\ConditionHasPoints.cs" />
     <Compile Include="Actions\RemovePoints.cs" />
     <Compile Include="Actions\SendEmail.cs" />
+    <Compile Include="BaseHasFlagsOnce.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Decision.cs" />
+    <Compile Include="DecisionManager.cs" />
+    <Compile Include="DecisionOption.cs" />
     <Compile Include="Executables\EnBreak.cs" />
     <Compile Include="Executables\EncypherExe.cs" />
     <Compile Include="Executables\EosCrack.cs" />
@@ -89,6 +101,8 @@
     <Compile Include="Executables\TransferCrackExe.cs" />
     <Compile Include="Executables\SocketCrackExe.cs" />
     <Compile Include="Goals\FileCreationGoal.cs" />
+    <Compile Include="OverwriteActions\DoesNotHaveFlagsModded.cs" />
+    <Compile Include="OverwriteActions\HasFlagsModded.cs" />
     <Compile Include="Pathfinder\Game.cs" />
     <Compile Include="PointsManager.cs" />
     <Compile Include="PointsPlaceholder.cs" />

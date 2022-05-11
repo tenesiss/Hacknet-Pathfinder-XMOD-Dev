@@ -17,6 +17,7 @@ public class SendEmailAction : Pathfinder.Action.DelayablePathfinderAction
     [XMLStorage]
     public string subject;
     public List<String> attachments;
+    private List<ElementInfo> attachmentsX;
     override public void Trigger(OS os)
     {
         MailServer mailServer = (MailServer)os.netMap.mailServer.getDaemon(typeof(MailServer));
@@ -28,6 +29,7 @@ public class SendEmailAction : Pathfinder.Action.DelayablePathfinderAction
         ElementInfo attachmentsD = info.Children.Find(x => x.Name == "attachments");
         ElementInfo bodyD = info.Children.Find(x => x.Name == "body");
         content = bodyD.Content;
+        attachmentsX = attachmentsD.Children;
         List<String> attachmentsEmail = new List<String>();
         OS main_os = Pathfinder.Util.ComputerLookup.FindById("playerComp").os;
         attachmentsD.Children.ForEach(xc =>
@@ -60,14 +62,42 @@ public class SendEmailAction : Pathfinder.Action.DelayablePathfinderAction
     public override XElement GetSaveElement()
     {
         XElement element =  base.GetSaveElement();
-        XElement ELbody = new XElement("body");
-        XElement ELAttLink = new XElement("link", "comp");
-        XElement ELAttAccount = new XElement("account", new object[] {"comp", "user", "pass"});
-        XElement ElAttNote = new XElement("note", "title");
-        object[] attachmentsAv = new object[] { ELAttLink, ELAttAccount, ElAttNote };
-        XElement ELattachments = new XElement("attachments", attachmentsAv);
+        List<XElement> attachmentsLD = new List<XElement>();
+        XElement ELbody = new XElement("body", content);
+        //  XElement ELAttLink = new XElement("link", attachments.all);
+        // XElement ELAttAccount = new XElement("account", new object[] {"comp", "user", "pass"});
+        // XElement ElAttNote = new XElement("note", "title");
+        attachmentsX.ForEach(eld =>
+        {
+            attachmentsLD.Add(ConvertElementInfoToXElement(eld));
+        });
+        XElement ELattachments = new XElement("attachments");
+        if(attachmentsLD.Count > 0)
+        {
+            ELattachments.Add(attachmentsLD);
+        }
         element.Add(ELbody);
         element.Add(ELattachments);
         return element;
+    }
+    private XElement ConvertElementInfoToXElement(ElementInfo el)
+    {
+        XElement Xel = new XElement(el.Name, el.Content);
+        foreach(KeyValuePair<string, string> elAt in el.Attributes)
+        {
+            Xel.SetAttributeValue(elAt.Key, elAt.Value);
+        }
+        if(el.Children.Count > 0)
+        {
+            for (int i = 0; i >= el.Children.Count; i++)
+            {
+
+                Xel.Add(ConvertElementInfoToXElement(el.Children[i]));
+            }
+            return Xel;
+        } else
+        {
+            return Xel;
+        }
     }
 }

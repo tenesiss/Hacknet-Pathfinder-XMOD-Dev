@@ -45,3 +45,7 @@ C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Lucene.Net.dll
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Lucene.Net.pdb
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Lucene.Net.xml
 C:\Users\bauti_2\source\repos\XMOD\PortsPlus\obj\Debug\PortsPlus.csprojAssemblyReference.cache
+C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\HacknetPathfinder.exe
+C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\AlienFXManagedWrapper3.5.dll
+C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Steamworks.NET.dll
+C:\Users\bauti_2\source\repos\XMOD\PortsPlus\bin\Debug\Steamworks.NET.dll.config
