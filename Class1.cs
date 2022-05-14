@@ -11,6 +11,7 @@ namespace HacknetPluginTemplate
     public class XMOD : HacknetPlugin
     {
         public const string ModGUID = "tenesiss.XMOD";
+        public Harmony HarmonyIns = new Harmony("XMOD.Harmony");
         public const string ModName = "XMOD";
         public const string ModVer = "1.0.0";
         private List<string> textArr = new List<string>();
@@ -155,6 +156,8 @@ namespace HacknetPluginTemplate
 
         public override bool Load()
         {
+            HarmonyIns.PatchAll();
+
             Console.WriteLine("tset");
             // Load/Register Executables
             LoadExe();

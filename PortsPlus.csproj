@@ -103,6 +103,7 @@
     <Compile Include="Goals\FileCreationGoal.cs" />
     <Compile Include="OverwriteActions\DoesNotHaveFlagsModded.cs" />
     <Compile Include="OverwriteActions\HasFlagsModded.cs" />
+    <Compile Include="OverwriteActions\ReplacementsUtils.cs" />
     <Compile Include="Pathfinder\Game.cs" />
     <Compile Include="PointsManager.cs" />
     <Compile Include="PointsPlaceholder.cs" />

@@ -17,11 +17,49 @@ public class SendEmailAction : Pathfinder.Action.DelayablePathfinderAction
     [XMLStorage]
     public string subject;
     public List<String> attachments;
+    public List<string> attachmentsRaw = new List<string>();
     private List<ElementInfo> attachmentsX;
     override public void Trigger(OS os)
     {
         MailServer mailServer = (MailServer)os.netMap.mailServer.getDaemon(typeof(MailServer));
-        mailServer.addMail(MailServer.generateEmail(subject, content, author, attachments), os.defaultUser.name);
+        mailServer.addMail(MailServer.generateEmail(subject, content, author, LoadAttachments()), os.defaultUser.name);
+    }
+    private List<string> LoadAttachments()
+    {
+        List<string> finalAttachments = new List<string>();
+        OS osP = OS.currentInstance;
+        if(attachmentsRaw != null && attachmentsRaw.Count > 0)
+        {
+            attachmentsRaw.ForEach(cld =>
+            {
+                int indxDots = cld.IndexOf(":");
+                string firstName = cld.Substring(0, indxDots); // link:playerComp | comp | note
+                string values = cld.Substring(indxDots + 1, cld.Length - (firstName.Length + 1));
+                // [link]:(proComp)
+                // []: firstName
+                // (): values
+                switch (firstName)
+                {
+                    case "link":
+                        Computer comp = Pathfinder.Util.ComputerLookup.FindById(values);
+                        finalAttachments.Add("link#%#" + values + "#%#" + comp.ip);
+                        break;
+                    case "account":
+                        string[] accData = values.Split(",".ToCharArray());
+                        Computer compAcc = Pathfinder.Util.ComputerLookup.FindById(accData[0]);
+                        finalAttachments.Add("account#%#" + accData[0] + "#%#" + compAcc.ip + "#%#" + accData[1] + "#%#" + accData[2]);
+                        break;
+                    case "note":
+                        string[] noteData = values.Split(",".ToCharArray());
+                        finalAttachments.Add("note#%#" + noteData[0] + "#%#" + noteData[1]);
+                        break;
+                }
+            });
+            return finalAttachments;
+        } else
+        {
+            return finalAttachments;
+        }
     }
     public override void LoadFromXml(ElementInfo info)
     {
@@ -30,43 +68,34 @@ public class SendEmailAction : Pathfinder.Action.DelayablePathfinderAction
         ElementInfo bodyD = info.Children.Find(x => x.Name == "body");
         content = bodyD.Content;
         attachmentsX = attachmentsD.Children;
-        List<String> attachmentsEmail = new List<String>();
-        OS main_os = Pathfinder.Util.ComputerLookup.FindById("playerComp").os;
+        OS main_os = OS.currentInstance;
         attachmentsD.Children.ForEach(xc =>
         {
             switch (xc.Name)
             {
                 case "link":
-                    Computer compLink = Pathfinder.Util.ComputerLookup.FindById(xc.Attributes["comp"]);
-                    if(compLink != null)
-                    {
-                        attachmentsEmail.Add("link#%#" + compLink.name + "#%#" + compLink.ip);
-                    }
+                    // attachmentsEmail.Add("link#%#" + compLink.name + "#%#" + compLink.ip);
+                        attachmentsRaw.Add("link:" + xc.Attributes["comp"]);
                     break;
                 case "account":
-                    Computer compAccount = Pathfinder.Util.ComputerLookup.FindById(xc.Attributes["comp"]);
-                    if(compAccount != null)
-                    {
-                        attachmentsEmail.Add("account#%#" + compAccount.name + "#%#" + compAccount.ip + "#%#" + xc.Attributes["user"] + "#%#" + xc.Attributes["pass"]);
-                    }
+                    // attachmentsEmail.Add("account#%#" + compAccount.name + "#%#" + compAccount.ip + "#%#" + xc.Attributes["user"] + "#%#" + xc.Attributes["pass"]); 
+                    string accData = "account:" + xc.Attributes["comp"] + "," + xc.Attributes["user"] + "," + xc.Attributes["pass"];
+                        attachmentsRaw.Add(accData);
                     break;
                 case "note":
                     string titleNote = xc.Attributes["title"];
                     string bodyNote = xc.Content;
-                    attachmentsEmail.Add("note#%#" + titleNote + "#%#" + bodyNote);
+                    // attachmentsEmail.Add("note#%#" + titleNote + "#%#" + bodyNote);
+                    attachmentsRaw.Add("note:" + titleNote + "," + bodyNote);
                     break;
             }
         });
-        attachments = attachmentsEmail;
     }
     public override XElement GetSaveElement()
     {
         XElement element =  base.GetSaveElement();
         List<XElement> attachmentsLD = new List<XElement>();
         XElement ELbody = new XElement("body", content);
-        //  XElement ELAttLink = new XElement("link", attachments.all);
-        // XElement ELAttAccount = new XElement("account", new object[] {"comp", "user", "pass"});
-        // XElement ElAttNote = new XElement("note", "title");
         attachmentsX.ForEach(eld =>
         {
             attachmentsLD.Add(ConvertElementInfoToXElement(eld));
