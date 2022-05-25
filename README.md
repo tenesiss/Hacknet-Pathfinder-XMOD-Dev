@@ -90,7 +90,7 @@
 - When executed it runs the given command in terminal
 - Attributes available
    - Comamnd: The command that will be executed (it can contain arguments)
-### Send Mail (SendEmail)
+### Send Mail (SendMail)
 - When executed it sends an email to the player
 - Attributes available
    - subject: The subject of the email
