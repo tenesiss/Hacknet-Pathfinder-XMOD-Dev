@@ -68,3 +68,4 @@ C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-
 C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-XMOD-Dev-0.0.1\obj\Debug\PortsPlus.csproj.CopyComplete
 C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-XMOD-Dev-0.0.1\obj\Debug\XMOD.dll
 C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-XMOD-Dev-0.0.1\obj\Debug\XMOD.pdb
+C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-XMOD-Dev-0.0.1\obj\Debug\PortsPlus.csprojAssemblyReference.cache

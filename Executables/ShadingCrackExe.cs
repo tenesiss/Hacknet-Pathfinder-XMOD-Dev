@@ -23,7 +23,7 @@ public class ShadingCrack : Pathfinder.Executable.BaseExecutable
         base.LoadContent();
         num = Pathfinder.Util.ComputerLookup.FindByIp(targetIP).GetDisplayPortNumberFromCodePort(591);
 
-        if (this.Args.Length < 1)
+        if (this.Args.Length < 2)
         {
             os.write("No port number Provided");
             os.write("Execution failed");

@@ -31,7 +31,7 @@ public class EncypherExe : Pathfinder.Executable.BaseExecutable
     public override void LoadContent()
     {
         base.LoadContent();
-            if(this.Args.Length < 1)
+            if(this.Args.Length < 2)
             {
                 needsRemoval = true;
                 os.write("You must input a filename");

@@ -22,7 +22,7 @@ public class SocketExe : Pathfinder.Executable.BaseExecutable
         base.LoadContent();
         num = Pathfinder.Util.ComputerLookup.FindByIp(targetIP).GetDisplayPortNumberFromCodePort(3500);
 
-        if (this.Args.Length < 1)
+        if (this.Args.Length < 2)
         {
             os.write("No port number Provided");
             os.write("Execution failed");
