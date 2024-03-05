@@ -125,7 +125,7 @@
 - When executed it can toggle the IRC messaging to the user, if it's disabled, user won't be able to send messages with the command "chat", if enabled, he will be able to do so, this saves along with the session.
 - Attributes availble:
    - enabled: "true" to enable it, "false" to disable it.
-   - name: The name that will appear in user's messages (only applies to new)
+   - name(?): The name that will appear in user's messages (only applies to new)
 
 ## Goals
 ### File Creation (filecreation)
