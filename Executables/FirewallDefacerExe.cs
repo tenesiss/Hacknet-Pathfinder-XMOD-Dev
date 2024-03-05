@@ -5,15 +5,20 @@ using Microsoft.Xna.Framework;
 using Pathfinder.Port;
 using Pathfinder;
 using System;
+using Hacknet.Gui;
+using XMOD;
 
 public class FirewallDefacer : Pathfinder.Executable.BaseExecutable
 {
     public override string GetIdentifier() => "FirewallDefacer";
     public bool exe = false;
+    private float lifetime = 0f;
+    private float maxLifetime;
     public FirewallDefacer(Rectangle location, OS operatingSystem, string[] args) : base(location, operatingSystem, args)
     {
-        this.ramCost = 300;
-        this.IdentifierName = "Firewall Defacer";
+        ramCost = ExeSettings.ram[GetIdentifier()];
+        IdentifierName = "Firewall Defacer";
+        maxLifetime = ExeSettings.completeTime[GetIdentifier()];
     }
     private int x = 0;
     public override void LoadContent()
@@ -29,28 +34,28 @@ public class FirewallDefacer : Pathfinder.Executable.BaseExecutable
         }
         Programs.getComputer(os, targetIP).hostileActionTaken();
     }
-    private float lifetime = 0f;
-    private float maxLifetime = 10.3f;
+    
     public override void Draw(float t)
     {
         base.Draw(t);
         drawTarget();
         drawOutline();
-        if (lifetime < (maxLifetime - 5))
+        if (lifetime < maxLifetime/3)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "DEFACING", GuiData.font, Color.DarkGray * fade);
         }
-        else if (lifetime >= (maxLifetime - 5) && lifetime < (maxLifetime - 2))
+        else if (lifetime >= maxLifetime/3 && lifetime < maxLifetime/2)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING.", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "DEFACING.", GuiData.font, Color.DarkGray * fade);
         }
-        else if (lifetime >= (maxLifetime - 2) && lifetime < (maxLifetime))
+        else if (lifetime >= maxLifetime/2 && lifetime < maxLifetime)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING..", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "DEFACING..", GuiData.font, Color.DarkGray * fade);
         }
-        else if (lifetime >= (maxLifetime))
+        else if (lifetime >= maxLifetime)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING...", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "DEFACED", GuiData.font, Color.DarkGray * fade);
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y + 30f), "Password: "+os.connectedComp.firewall.solution, GuiData.smallfont, Color.DarkGray * fade);
         }
     }
 
@@ -59,7 +64,7 @@ public class FirewallDefacer : Pathfinder.Executable.BaseExecutable
     public override void Update(float t)
     {
         base.Update(t);
-        if (lifetime >= 10.3f && isExiting == false && exe == false)
+        if (lifetime >= maxLifetime && isExiting == false && exe == false)
         {
             exe = true;
             isExiting = true;

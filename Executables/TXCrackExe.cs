@@ -5,16 +5,27 @@ using Microsoft.Xna.Framework;
 using Pathfinder.Port;
 using Pathfinder;
 using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
+using Hacknet.Gui;
+using XMOD;
 
 public class TXCrack : Pathfinder.Executable.BaseExecutable
 {
     public override string GetIdentifier() => "TXCrack";
     public int num;
+    private float y2;
+    public float velocity = 2f;
+    public float currentPosX;
     public bool exe = false;
+    private float lifetime = 0f;
+    private float maxLifetime;
     public TXCrack(Rectangle location, OS operatingSystem, string[] args) : base(location, operatingSystem, args)
     {
-        this.ramCost = 165;
-        this.IdentifierName = "Tech Xeno Crack";
+        ramCost = ExeSettings.ram[GetIdentifier()];
+        currentPosX = Bounds.Center.X;
+        IdentifierName = "Tech Xeno Crack";
+        maxLifetime = ExeSettings.completeTime[GetIdentifier()];
     }
     private int x = 0;
     public override void LoadContent()
@@ -37,28 +48,25 @@ public class TXCrack : Pathfinder.Executable.BaseExecutable
         }
         Programs.getComputer(os, targetIP).hostileActionTaken();
     }
-private float lifetime = 0f;
-    private float maxLifetime = 21.2f;
     public override void Draw(float t)
     {
         base.Draw(t);
-        drawTarget();
         drawOutline();
-        if (lifetime < (maxLifetime - 5))
+        drawTarget();
+        if (lifetime >= 21.2f)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y + 10f), "HACK COMPLETED", GuiData.smallfont, Color.LightGray * fade);
         }
-        else if (lifetime >= (maxLifetime - 5) && lifetime < (maxLifetime - 2))
+        if ((currentPosX + velocity) >= Bounds.Right - 10 || (currentPosX + velocity) <= Bounds.Left + 5)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING.", new Color(255, 0, 0));
+         velocity = -velocity;
         }
-        else if (lifetime >= (maxLifetime - 2) && lifetime < (maxLifetime))
+        currentPosX = currentPosX + velocity;
+        y2 = Bounds.Center.Y - 10f;
+        spriteBatch.Draw(Hacknet.Utils.white, new Vector2(currentPosX, y2), null, Color.DarkGray * fade, 0f, Vector2.Zero, 10f, SpriteEffects.None, 0f);
+        if (lifetime < 21.2f)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING..", new Color(255, 0, 0));
-        }
-        else if (lifetime >= (maxLifetime))
-        {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING...", new Color(255, 0, 0));
+           velocity = (velocity / Math.Abs(velocity)) * (Math.Abs(velocity) + 0.01f);
         }
     }
 
@@ -67,8 +75,9 @@ private float lifetime = 0f;
     public override void Update(float t)
     {
         base.Update(t);
-        if (lifetime >= 21.2f && isExiting == false && exe == false)
+        if (lifetime >= maxLifetime && isExiting == false && exe == false)
         {
+            velocity = 50f;
             exe = true;
             isExiting = true;
             Programs.getComputer(os, targetIP).openPort("tx", os.thisComputer.ip);

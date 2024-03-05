@@ -5,16 +5,21 @@ using Microsoft.Xna.Framework;
 using Pathfinder.Port;
 using Pathfinder;
 using System;
+using Hacknet.Gui;
+using XMOD;
 
 public class TransferExe : Pathfinder.Executable.BaseExecutable
 {
     public override string GetIdentifier() => "TransferCrack";
     public int num;
     public bool exe = false;
+    private float lifetime = 0f;
+    private float maxLifetime;
     public TransferExe(Rectangle location, OS operatingSystem, string[] args) : base(location, operatingSystem, args)
     {
-        this.ramCost = 620;
-        this.IdentifierName = "Transfer Crack";
+        ramCost = ExeSettings.ram[GetIdentifier()];
+        IdentifierName = "Transfer Crack";
+        maxLifetime = ExeSettings.completeTime[GetIdentifier()];
     }
     private int x = 0;
     public override void LoadContent()
@@ -36,28 +41,26 @@ public class TransferExe : Pathfinder.Executable.BaseExecutable
         }
         Programs.getComputer(os, targetIP).hostileActionTaken();
     }
-private float lifetime = 0f;
-    private float maxLifetime = 10f;
     public override void Draw(float t)
     {
         base.Draw(t);
         drawTarget();
         drawOutline();
-        if (lifetime < (maxLifetime - 5))
+        if (lifetime < maxLifetime / 3)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "CRACKING", GuiData.font, Color.DarkGray * fade);
         }
-        else if (lifetime >= (maxLifetime - 5) && lifetime < (maxLifetime - 2))
+        else if (lifetime >= maxLifetime / 3 && lifetime < maxLifetime / 2)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING.", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "CRACKING.", GuiData.font, Color.DarkGray * fade);
         }
-        else if (lifetime >= (maxLifetime - 2) && lifetime < (maxLifetime))
+        else if (lifetime >= maxLifetime / 2 && lifetime < maxLifetime)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING..", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "CRACKING..", GuiData.font, Color.DarkGray * fade);
         }
-        else if (lifetime >= (maxLifetime))
+        else if (lifetime >= maxLifetime)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING...", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "CRACKED", GuiData.font, Color.DarkGray * fade);
         }
     }
 
@@ -66,7 +69,7 @@ private float lifetime = 0f;
     public override void Update(float t)
     {
         base.Update(t);
-        if (lifetime >= 10f && isExiting == false && exe == false)
+        if (lifetime >= maxLifetime && isExiting == false && exe == false)
         {
             exe = true;
             isExiting = true;

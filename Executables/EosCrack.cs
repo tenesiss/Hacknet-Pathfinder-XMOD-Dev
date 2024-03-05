@@ -6,16 +6,21 @@ using Pathfinder.Port;
 using Pathfinder;
 using System;
 using Hacknet;
+using Hacknet.Gui;
+using XMOD;
 
 public class EosCrack : Pathfinder.Executable.BaseExecutable
 {
     public override string GetIdentifier() => "EosCrack";
     public int num;
     public bool exe = false;
+    private float lifetime = 0f;
+    private float maxLifetime;
     public EosCrack(Rectangle location, OS operatingSystem, string[] args) : base(location, operatingSystem, args)
     {
-        this.ramCost = 225;
-        this.IdentifierName = "Eos Crack";
+        ramCost = ExeSettings.ram[GetIdentifier()];
+        IdentifierName = "Eos Crack";
+        maxLifetime = ExeSettings.completeTime[GetIdentifier()];
     }
     private int x = 0;
     public override void LoadContent()
@@ -44,15 +49,29 @@ public class EosCrack : Pathfinder.Executable.BaseExecutable
         base.Draw(t);
         drawTarget();
         drawOutline();
-        Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X, Bounds.Center.Y), "HACKING...", new Color(255, 0, 0));
+        if (lifetime < maxLifetime / 3)
+        {
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "CRACKING", GuiData.font, Color.DarkGray * fade);
+        }
+        else if (lifetime >= maxLifetime / 3 && lifetime < maxLifetime / 2)
+        {
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "CRACKING.", GuiData.font, Color.DarkGray * fade);
+        }
+        else if (lifetime >= maxLifetime / 2 && lifetime < maxLifetime)
+        {
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "CRACKING..", GuiData.font, Color.DarkGray * fade);
+        }
+        else if (lifetime >= maxLifetime)
+        {
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y), "CRACKED", GuiData.font, Color.DarkGray * fade);
+        }
     }
 
-    private float lifetime = 0f;
-
+    
     public override void Update(float t)
     {
         base.Update(t);
-        if (lifetime >= 9.5f && isExiting == false && exe == false)
+        if (lifetime >= maxLifetime && isExiting == false && exe == false)
         {
             exe = true;
             isExiting = true;

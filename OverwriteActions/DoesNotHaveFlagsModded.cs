@@ -15,11 +15,10 @@ public class DoesNotHaveFlagsNew : Pathfinder.Action.PathfinderCondition
     [XMLStorage]
     public string Flags;
 
-    // Custom attribute that you are adding to the class.
     [XMLStorage]
     public string checkOnce = "false";
 
-    // Copied method from SCHasFlags. You could also use a reverse patch to copy the code for you.
+
     public override bool Check(object os_obj)
     {
         OS oS = (OS)os_obj;

@@ -69,3 +69,9 @@ C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-
 C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-XMOD-Dev-0.0.1\obj\Debug\XMOD.dll
 C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-XMOD-Dev-0.0.1\obj\Debug\XMOD.pdb
 C:\Users\bauti_2\Downloads\Hacknet-Pathfinder-XMOD-Dev-0.0.1\Hacknet-Pathfinder-XMOD-Dev-0.0.1\obj\Debug\PortsPlus.csprojAssemblyReference.cache
+C:\Users\tenesiss\OneDrive\Documentos\xmod\Hacknet-Pathfinder-XMOD-Dev\bin\Debug\XMOD.dll
+C:\Users\tenesiss\OneDrive\Documentos\xmod\Hacknet-Pathfinder-XMOD-Dev\bin\Debug\XMOD.pdb
+C:\Users\tenesiss\OneDrive\Documentos\xmod\Hacknet-Pathfinder-XMOD-Dev\obj\Debug\PortsPlus.csproj.AssemblyReference.cache
+C:\Users\tenesiss\OneDrive\Documentos\xmod\Hacknet-Pathfinder-XMOD-Dev\obj\Debug\PortsPlus.csproj.CoreCompileInputs.cache
+C:\Users\tenesiss\OneDrive\Documentos\xmod\Hacknet-Pathfinder-XMOD-Dev\obj\Debug\XMOD.dll
+C:\Users\tenesiss\OneDrive\Documentos\xmod\Hacknet-Pathfinder-XMOD-Dev\obj\Debug\XMOD.pdb

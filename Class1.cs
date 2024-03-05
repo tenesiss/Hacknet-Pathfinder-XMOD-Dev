@@ -4,20 +4,28 @@ using HarmonyLib;
 using Hacknet;
 using System;
 using System.Collections.Generic;
+using Hacknet.Daemons.Helpers;
+using Microsoft.Xna.Framework;
+using System.Linq;
+using Hacknet.Extensions;
+using System.Runtime.Remoting.Messaging;
+using XMOD;
+using System.IO;
 
-namespace HacknetPluginTemplate
+namespace XMOD
 {
     [BepInPlugin(ModGUID, ModName, ModVer)]
     public class XMOD : HacknetPlugin
     {
         public const string ModGUID = "tenesiss.XMOD";
-        public Harmony HarmonyIns = new Harmony("XMOD.Harmony");
         public const string ModName = "XMOD";
         public const string ModVer = "1.0.0";
         private List<string> textArr = new List<string>();
         private string textFile;
         private int i;
         private string idLog;
+        static public bool sendIRCEnabled = false;
+        static public string sendIRCName;
         private string logFilename;
         private string logContent;
         private string final_filename;
@@ -58,6 +66,17 @@ namespace HacknetPluginTemplate
                 return filename;
             }
         }
+
+        public static string FullPath(string dir)
+        {
+            return ExtensionLoader.ActiveExtensionInfo.FolderPath + "/" + dir;
+        }
+
+        public static bool ConvertToBool(string boolinstring)
+        {
+            return (boolinstring == "true" ? true : false);
+        }
+
         private void LoadExe()
         {
             Pathfinder.Executable.ExecutableManager.RegisterExecutable<TransferExe>("#TRANSFER_CRACK#");
@@ -109,6 +128,35 @@ namespace HacknetPluginTemplate
                 }
             }
         }
+
+        private void sendIRCRun(OS os, string[] args)
+        {
+            if (sendIRCEnabled)
+            {
+                if (!os.connectedComp.daemons.Exists(d => d is IRCDaemon || d is DLCHubServer))
+                {
+                    os.write("You are not connected to an IRC Server.");
+                }
+                else
+                {
+                    if (args[1] == null)
+                    {
+                        os.write("You must enter a message to send.");
+                    } else
+                    {
+                        string message = string.Join(" ", args.Where(a => a != args[0]));
+                        dynamic ircd = os.connectedComp.getDaemon(typeof(IRCDaemon)) ?? os.connectedComp.getDaemon(typeof(DLCHubServer));
+                        IRCSystem ircsys = ircd.System;
+                        DateTime dt = DateTime.Now;
+                        string timestamp = dt.Hour.ToString("00") + ":" + dt.Minute.ToString("00");
+
+                        ircsys.AddLog(sendIRCName ?? os.username, message, timestamp);
+                    }
+                    
+                }
+            }
+        }
+
         private void mkfileRun(OS os, string[] args)
         {
             if (!os.connectedComp.PlayerHasAdminPermissions())
@@ -156,32 +204,38 @@ namespace HacknetPluginTemplate
 
         public override bool Load()
         {
-            HarmonyIns.PatchAll();
+            HarmonyInstance.PatchAll();
 
-            Console.WriteLine("tset");
             // Load/Register Executables
             LoadExe();
             // Load/Register Ports
             LoadPorts();
 
-            // == COMMAND LOAD ===
 
             
 
             Pathfinder.Mission.GoalManager.RegisterGoal<FileCreationGoal>("filecreation");
-            Pathfinder.Action.ActionManager.RegisterAction<CmdRunAction>("CmdRun");
-            Pathfinder.Action.ActionManager.RegisterAction<AddPoints>("AddPoints");
-            Pathfinder.Action.ActionManager.RegisterAction<RemovePoints>("RemovePoints");
+            
             // mkfile args: ["filename", '"hello', "i'm", "robert", '"'] - at least a prototype
             Pathfinder.Command.CommandManager.RegisterCommand("mkfile", mkfileRun);
             Pathfinder.Command.CommandManager.RegisterCommand("mkdir", mkdirRun);
+            Pathfinder.Command.CommandManager.RegisterCommand("chat", sendIRCRun);
 
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileDeletion>("FileDeleted");
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileCreation>("FileCreated");
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionHasPoints>("HasPoints");
+            Pathfinder.Action.ConditionManager.RegisterCondition<ConditionPlayerSentMessage>("PlayerSentMessage");
             Pathfinder.Action.ConditionManager.RegisterCondition<HasFlagsNew>("HasFlags");
             Pathfinder.Action.ConditionManager.RegisterCondition<DoesNotHaveFlagsNew>("DoesNotHaveFlags");
+
+            Pathfinder.Action.ActionManager.RegisterAction<CmdRunAction>("CmdRun");
+            Pathfinder.Action.ActionManager.RegisterAction<AddPoints>("AddPoints");
+            Pathfinder.Action.ActionManager.RegisterAction<RemovePoints>("RemovePoints");
             Pathfinder.Action.ActionManager.RegisterAction<SendEmailAction>("SendMail");
+            Pathfinder.Action.ActionManager.RegisterAction<EnableIRCMessaging>("EnableIRCMessaging");
+            Pathfinder.Action.ActionManager.RegisterAction<LoadMissionX>("LoadMissionX");
+            Pathfinder.Action.ActionManager.RegisterAction<CancelMissionX>("CancelMissionX");
+
             return true;
         }
     }

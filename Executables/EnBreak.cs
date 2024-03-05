@@ -5,16 +5,26 @@ using Microsoft.Xna.Framework;
 using Pathfinder.Port;
 using Pathfinder;
 using System;
+using Hacknet.Gui;
+using Microsoft.Xna.Framework.Graphics;
+using XMOD;
 
 public class EnBreak : Pathfinder.Executable.BaseExecutable
 {
     public override string GetIdentifier() => "EnBreak";
     public int num;
+    private float velocity;
+    private float currentPosX;
+    private float maxLifetime;
+    private float lifetime = 0f;
+    private float y2;
     public bool exe = false;
     public EnBreak(Rectangle location, OS operatingSystem, string[] args) : base(location, operatingSystem, args)
     {
-        this.ramCost = 151;
-        this.IdentifierName = "En Breaker";
+        currentPosX = Bounds.Center.X;
+        ramCost = ExeSettings.ram[GetIdentifier()];
+        IdentifierName = "En Breaker";
+        maxLifetime = ExeSettings.completeTime[GetIdentifier()];
     }
     private int x = 0;
     public override void LoadContent()
@@ -25,30 +35,28 @@ public class EnBreak : Pathfinder.Executable.BaseExecutable
             needsRemoval = true;
         }
     }
-    private float lifetime = 0f;
-    private float maxLifetime = 10f;
+    
+    
     public override void Draw(float t)
     {
         base.Draw(t);
         drawTarget();
         drawOutline();
-        if (lifetime < (maxLifetime - 5))
+        if (lifetime >= 21.2f)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING", new Color(255, 0, 0));
+            TextItem.doFontLabel(new Vector2(Bounds.Center.X / 2 + 3f, bounds.Center.Y + 10f), "HACK COMPLETED", GuiData.smallfont, Color.LightGray * fade);
         }
-        else if (lifetime >= (maxLifetime - 5) && lifetime < (maxLifetime - 2))
+        if ((currentPosX + velocity) >= Bounds.Right - 10 || (currentPosX + velocity) <= Bounds.Left + 5)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING.", new Color(255, 0, 0));
+            velocity = -velocity;
         }
-        else if (lifetime >= (maxLifetime - 2) && lifetime < (maxLifetime))
+        currentPosX = currentPosX + velocity;
+        y2 = Bounds.Center.Y - 10f;
+        spriteBatch.Draw(Hacknet.Utils.white, new Vector2(currentPosX, y2), null, Color.DarkGray * fade, 0f, Vector2.Zero, 10f, SpriteEffects.None, 0f);
+        if (lifetime < 21.2f)
         {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING..", new Color(255, 0, 0));
+            velocity = (velocity / Math.Abs(velocity)) * (Math.Abs(velocity) + 0.01f);
         }
-        else if (lifetime >= (maxLifetime))
-        {
-            Hacknet.Gui.TextItem.doLabel(new Vector2(Bounds.Center.X - 100, Bounds.Center.Y - 100), "HACKING...", new Color(255, 0, 0));
-        }
-
     }
 
     
@@ -59,8 +67,9 @@ public class EnBreak : Pathfinder.Executable.BaseExecutable
     public override void Update(float t)
     {
         base.Update(t);
-        if (lifetime >= 10f && isExiting == false && exe == false)
+        if (lifetime >= maxLifetime && isExiting == false && exe == false)
         {
+            velocity = 50f;
             exe = true;
             isExiting = true;
             Programs.getComputer(os, targetIP).giveAdmin(targetIP);
