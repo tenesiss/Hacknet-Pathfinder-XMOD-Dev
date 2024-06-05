@@ -47,7 +47,7 @@
 - Sends IRC message to the current IRC, computer must have IRC/DHS daemon, only works when IRC messaging is enabled by the action
 - Format: `chat [message]`
 - Requires admin: No
-### dnscan
+### Domain Scan
 - Searches for a DNS record with the specified domain
 - Format: `dnscan [domain]`
 - Requires admin: No
