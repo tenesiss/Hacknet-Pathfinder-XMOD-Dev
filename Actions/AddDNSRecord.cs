@@ -15,7 +15,7 @@ public class AddDNSRecord : Pathfinder.Action.DelayablePathfinderAction
     [XMLStorage]
     public string domain;
     [XMLStorage]
-    public string registeredBy;
+    public string registeredBy="UNKNOWN";
     override public void Trigger(OS os)
     {
         XMOD.XMOD.DNSData.Add(new DNSRecord(domain, ip, registeredBy));
