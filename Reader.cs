@@ -33,12 +33,17 @@ namespace XMOD
                 if(theMission is null) continue;
                 activeMissions.Add(theMission);
             }
-
+            List<DNSRecord> dnsRecords = new List<DNSRecord>();
+            IEnumerable<XElement> recordsEls = userSaveElement.Element("DNS").Elements("Record");
+            for(int i=0;i < recordsEls.Count(); i++)
+            {
+                dnsRecords.Add(new DNSRecord(recordsEls.ElementAt(i).Value, recordsEls.ElementAt(i).Attribute("ip").Value, recordsEls.ElementAt(i).Attribute("registeredBy").Value));
+            }
             XElement IRCMessagingConfig = userSaveElement.Element("IRCMessagingConfig");
             bool canSendIRCMessage = IRCMessagingConfig.Attribute("enabled").Value == "true";
             string IRCMessageName = IRCMessagingConfig.Attribute("name").Value == "NONE" ? null : IRCMessagingConfig.Attribute("name").Value;
 
-            return new SaveData(activeMissions, canSendIRCMessage, IRCMessageName);
+            return new SaveData(activeMissions, canSendIRCMessage, IRCMessageName, dnsRecords);
         }
         public static void WriteXMODSave(string path)
         {
@@ -72,12 +77,21 @@ namespace XMOD
             }
             userSaveElement.Add(missionsEl);
 
+            XElement dnsRecords = new XElement("DNS");
+            for (int i = 0; i < XMOD.DNSData.Count; i++)
+            {
+                XElement record = new XElement("Record", XMOD.DNSData[i].domain);
+                record.Add(new XAttribute("ip", XMOD.DNSData[i].ip));
+                record.Add(new XAttribute("registeredBy", XMOD.DNSData[i].registeredBy));
+                dnsRecords.Add(record);
+            }
             XElement IRCConfig = new XElement("IRCMessagingConfig");
             XAttribute canSendIRCMessage = new XAttribute("enabled", XMOD.sendIRCEnabled);
             XAttribute IRCMessageName = new XAttribute("name", XMOD.sendIRCName ?? "NONE");
             IRCConfig.Add(canSendIRCMessage);
             IRCConfig.Add(IRCMessageName);
             userSaveElement.Add(IRCConfig);
+            userSaveElement.Add(dnsRecords);
 
             SaveDocument.Save(path);
         }

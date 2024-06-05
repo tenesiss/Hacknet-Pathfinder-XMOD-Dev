@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\AddDNSRecord.cs" />
     <Compile Include="Actions\AddPoints.cs" />
     <Compile Include="Actions\EnableIRCMessaging.cs" />
     <Compile Include="Actions\CmdRun.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Actions\RemovePoints.cs" />
     <Compile Include="Actions\SendEmail.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="DNSRecord.cs" />
     <Compile Include="SaveData.cs" />
     <Compile Include="EmailData.cs" />
     <Compile Include="Error.cs" />

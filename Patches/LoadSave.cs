@@ -19,6 +19,7 @@ namespace XMOD.Patches
             ParalellMissionManager.currentMissions = save.activeMissions;
             XMOD.sendIRCEnabled = save.CanSendIRCMessage;
             XMOD.sendIRCName = save.IRCMessageName;
+            XMOD.DNSData = save.dnsRecords;
         }
     }
 }

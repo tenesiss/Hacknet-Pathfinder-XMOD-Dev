@@ -25,6 +25,7 @@ namespace XMOD
         private int i;
         private string idLog;
         static public bool sendIRCEnabled = false;
+        static public List<DNSRecord> DNSData = new List<DNSRecord>();
         static public string sendIRCName;
         private string logFilename;
         private string logContent;
@@ -202,6 +203,23 @@ namespace XMOD
             }
         }
 
+        private void DnsSearchRun(OS os, string[] args)
+        {
+            DNSRecord record = DNSData.Find(r => r.domain == args[1]);
+            if (record != null)
+            {
+                os.write("");
+                os.write("DNS Record found!");
+                os.write("== DNS Record Data ==");
+                os.write("Domain: " +  record.domain);
+                os.write("Pointing IP: " + record.ip);
+                os.write("Registered by: " + record.registeredBy);
+            } else
+            {
+                os.write("DNS Record not found!");
+            }
+        }
+
         public override bool Load()
         {
             HarmonyInstance.PatchAll();
@@ -220,6 +238,7 @@ namespace XMOD
             Pathfinder.Command.CommandManager.RegisterCommand("mkfile", mkfileRun);
             Pathfinder.Command.CommandManager.RegisterCommand("mkdir", mkdirRun);
             Pathfinder.Command.CommandManager.RegisterCommand("chat", sendIRCRun);
+            Pathfinder.Command.CommandManager.RegisterCommand("dnscan", DnsSearchRun);
 
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileDeletion>("FileDeleted");
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileCreation>("FileCreated");
@@ -235,6 +254,7 @@ namespace XMOD
             Pathfinder.Action.ActionManager.RegisterAction<EnableIRCMessaging>("EnableIRCMessaging");
             Pathfinder.Action.ActionManager.RegisterAction<LoadMissionX>("LoadMissionX");
             Pathfinder.Action.ActionManager.RegisterAction<CancelMissionX>("CancelMissionX");
+            Pathfinder.Action.ActionManager.RegisterAction<AddDNSRecord>("AddDNSRecord");
 
             return true;
         }
