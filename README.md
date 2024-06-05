@@ -47,6 +47,10 @@
 - Sends IRC message to the current IRC, computer must have IRC/DHS daemon, only works when IRC messaging is enabled by the action
 - Format: `chat [message]`
 - Requires admin: No
+### Domain Scan
+- Searches for a DNS record with the specified domain
+- Format: `dnscan [domain]`
+- Requires admin: No
 
 ## Conditional Actions
 ### File Copied (FileCopied)
@@ -123,9 +127,15 @@
    - MissionIdentifier: The mission identifier, note it's not the path, it's the identifier.
 ### EnableIRCMessaging
 - When executed it can toggle the IRC messaging to the user, if it's disabled, user won't be able to send messages with the command "chat", if enabled, he will be able to do so, this saves along with the session.
-- Attributes availble:
+- Attributes available:
    - enabled: "true" to enable it, "false" to disable it.
    - name(?): The name that will appear in user's messages (only applies to new)
+### AddDNSRecord
+- Adds a DNS record with the specified ip, domain and the ip that registered it.
+- Attributes available:
+  - ip: The record's pointing IP
+  - domain: The record's domain
+  - registeredBy(?): The ip or name of the person/node that added the record, by default is "UNKNOWN"
 
 ## Goals
 ### File Creation (filecreation)
