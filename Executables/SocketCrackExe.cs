@@ -33,7 +33,7 @@ public class SocketExe : Pathfinder.Executable.BaseExecutable
             os.write("Execution failed");
             needsRemoval = true;
         }
-        else if (Int32.Parse(this.Args[1]) != num || Pathfinder.Util.ComputerLookup.FindByIp(targetIP).ports.Find(p => p == 3500) == 0)
+        else if (Int32.Parse(this.Args[1]) != num)
         {
             os.write("Target Port is Closed");
             os.write("Execution failed");

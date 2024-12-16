@@ -17,7 +17,7 @@ namespace XMOD
             {"FirewallDefacerExe", 19f},
             {"PoliceCrack", 18f},
             {"ShadingCrack", 18f},
-            {"SMTPCrackFast", 7f},
+            {"SMTPFastCrack", 7f},
             {"TransferCrack", 20f},
             {"TXCrack", 15f},
             {"VersionCrack", 19f}
@@ -30,7 +30,7 @@ namespace XMOD
             {"FirewallDefacerExe", 190},
             {"PoliceCrack", 256},
             {"ShadingCrack", 252},
-            {"SMTPCrackFast", 250},
+            {"SMTPFastCrack", 250},
             {"TransferCrack", 255},
             {"TXCrack", 247},
             {"VersionCrack", 244}
