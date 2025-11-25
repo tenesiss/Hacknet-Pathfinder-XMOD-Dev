@@ -22,8 +22,7 @@ public class AddPoints : Pathfinder.Action.DelayablePathfinderAction
             placeholderGT.AddPoints(amount);
         } else
         {
-            Console.WriteLine(amount);
-            PointsPlaceholder placeholderNT = new PointsPlaceholder(placeholder, amount);
+            new PointsPlaceholder(placeholder, amount);
         }
     }
 }

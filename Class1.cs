@@ -11,6 +11,7 @@ using Hacknet.Extensions;
 using System.Runtime.Remoting.Messaging;
 using XMOD;
 using System.IO;
+using XMOD.Config;
 
 namespace XMOD
 {
@@ -21,6 +22,10 @@ namespace XMOD
         public const string ModName = "XMOD";
         public const string ModVer = "1.0.0";
         private List<string> textArr = new List<string>();
+        public static XConfig config;
+        public static List<XConnection> connections;
+        public static float lastDataUpdates = 0;
+        public static Choice lastChoice = null;
         private string textFile;
         private int i;
         private string idLog;
@@ -219,6 +224,35 @@ namespace XMOD
                 os.write("DNS Record not found!");
             }
         }
+        
+        private void seeChoicesRun(OS os, string[] args)
+        {
+            if(ChoiceManager.choices.Count == 0)
+            {
+                os.write("There are currently no possible choices.");
+            } else
+            {
+                ChoiceManager.showChoices(os);
+            }
+        }
+
+        private void chooseRun(OS os, string[] args)
+        {
+            if (ChoiceManager.choices.Count > 0)
+            {
+                int choiceId = int.Parse(args[1]);
+                Choice choice = ChoiceManager.choose(choiceId);
+                if (choice == null)
+                {
+                    os.write("Invalid choice number.");
+                }
+                else
+                {
+                    lastChoice = choice;
+                    os.write("Choice made.");
+                }
+            }
+        }
 
         public override bool Load()
         {
@@ -229,8 +263,7 @@ namespace XMOD
             // Load/Register Ports
             LoadPorts();
 
-
-            
+            lastChoice = null;
 
             Pathfinder.Mission.GoalManager.RegisterGoal<FileCreationGoal>("filecreation");
             
@@ -239,6 +272,8 @@ namespace XMOD
             Pathfinder.Command.CommandManager.RegisterCommand("mkdir", mkdirRun);
             Pathfinder.Command.CommandManager.RegisterCommand("chat", sendIRCRun);
             Pathfinder.Command.CommandManager.RegisterCommand("dnscan", DnsSearchRun);
+            Pathfinder.Command.CommandManager.RegisterCommand("choices", seeChoicesRun);
+            Pathfinder.Command.CommandManager.RegisterCommand("choose", chooseRun);
 
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileDeletion>("FileDeleted");
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionFileCreation>("FileCreated");
@@ -246,6 +281,8 @@ namespace XMOD
             Pathfinder.Action.ConditionManager.RegisterCondition<ConditionPlayerSentMessage>("PlayerSentMessage");
             Pathfinder.Action.ConditionManager.RegisterCondition<HasFlagsNew>("HasFlags");
             Pathfinder.Action.ConditionManager.RegisterCondition<DoesNotHaveFlagsNew>("DoesNotHaveFlags");
+            Pathfinder.Action.ConditionManager.RegisterCondition<ConditionalHasChosen>("HasChosen");
+
 
             Pathfinder.Action.ActionManager.RegisterAction<CmdRunAction>("CmdRun");
             Pathfinder.Action.ActionManager.RegisterAction<AddPoints>("AddPoints");
@@ -255,6 +292,9 @@ namespace XMOD
             Pathfinder.Action.ActionManager.RegisterAction<LoadMissionX>("LoadMissionX");
             Pathfinder.Action.ActionManager.RegisterAction<CancelMissionX>("CancelMissionX");
             Pathfinder.Action.ActionManager.RegisterAction<AddDNSRecord>("AddDNSRecord");
+            Pathfinder.Action.ActionManager.RegisterAction<AddChoice>("AddChoice");
+            Pathfinder.Action.ActionManager.RegisterAction<ShowChoices>("ShowChoices");
+            Pathfinder.Action.ActionManager.RegisterAction<ResetChoices>("ResetChoices");
 
             return true;
         }

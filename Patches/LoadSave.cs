@@ -16,10 +16,17 @@ namespace XMOD.Patches
         {
             ParalellMissionManager.ReadMissions();
             SaveData save = Reader.ReadXMODSave(ExtensionLoader.ActiveExtensionInfo.FolderPath + "/XMODSave.xml");
+            XConfig config = Reader.ReadXMOConfig(ExtensionLoader.ActiveExtensionInfo.FolderPath + "/XMODSettings.xml");
             ParalellMissionManager.currentMissions = save.activeMissions;
             XMOD.sendIRCEnabled = save.CanSendIRCMessage;
             XMOD.sendIRCName = save.IRCMessageName;
             XMOD.DNSData = save.dnsRecords;
+            ChoiceManager.choices = save.choices;
+            if(config != null)
+            {
+                XMOD.config = config;
+                XMOD.connections = config.connections;
+            }
         }
     }
 }

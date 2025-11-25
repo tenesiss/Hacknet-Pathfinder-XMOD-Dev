@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Pathfinder.Util;
 using Hacknet.Extensions;
 using System.IO;
+using XMOD.Config;
 
 namespace XMOD
 {
@@ -25,25 +26,51 @@ namespace XMOD
             XElement userSaveElement = saveDocument.Element("Saves").Elements("AccountSave").ToList().Find(el => el.Attribute("accountName").Value == OS.currentInstance.SaveUserAccountName);
             if (userSaveElement is null) return null;
            
+
             List<Mission> activeMissions = new List<Mission>();
-            IEnumerable<XElement> missionsEls = userSaveElement.Element("Missions").Elements("Mission");
-            for(int i=0;i < missionsEls.Count(); i++)
+
+            if(userSaveElement.Element("Missions") != null)
             {
-                Mission theMission = ParalellMissionManager.missions.Find(m => m.identifier == missionsEls.ElementAt(i).Value);
-                if(theMission is null) continue;
-                activeMissions.Add(theMission);
+                IEnumerable<XElement> missionsEls = userSaveElement.Element("Missions").Elements("Mission");
+                for (int i = 0; i < missionsEls.Count(); i++)
+                {
+                    Mission theMission = ParalellMissionManager.missions.Find(m => m.identifier == missionsEls.ElementAt(i).Value);
+                    if (theMission is null) continue;
+                    activeMissions.Add(theMission);
+                }
             }
+            
+
             List<DNSRecord> dnsRecords = new List<DNSRecord>();
-            IEnumerable<XElement> recordsEls = userSaveElement.Element("DNS").Elements("Record");
-            for(int i=0;i < recordsEls.Count(); i++)
+
+            if (userSaveElement.Element("DNS") != null)
             {
-                dnsRecords.Add(new DNSRecord(recordsEls.ElementAt(i).Value, recordsEls.ElementAt(i).Attribute("ip").Value, recordsEls.ElementAt(i).Attribute("registeredBy").Value));
+                IEnumerable<XElement> recordsEls = userSaveElement.Element("DNS").Elements("Record");
+                for (int i = 0; i < recordsEls.Count(); i++)
+                {
+                    dnsRecords.Add(new DNSRecord(recordsEls.ElementAt(i).Value, recordsEls.ElementAt(i).Attribute("ip").Value, recordsEls.ElementAt(i).Attribute("registeredBy").Value));
+                }
             }
+
+
+            List<Choice> choices = new List<Choice>();
+            if(userSaveElement.Element("Choices") != null)
+            {
+                IEnumerable<XElement> choicesEls = userSaveElement.Element("Choices").Elements("Choice");
+                for (int i = 0; i < choicesEls.Count(); i++)
+                {
+                    choices.Add(new Choice(choicesEls.ElementAt(i).Attribute("id").Value, choicesEls.ElementAt(i).Attribute("title").Value, choicesEls.ElementAt(i).Attribute("description").Value, choicesEls.ElementAt(i).Attribute("resetAfterChoose").Value == "true" ? true : false));
+                }
+            }
+
+
             XElement IRCMessagingConfig = userSaveElement.Element("IRCMessagingConfig");
             bool canSendIRCMessage = IRCMessagingConfig.Attribute("enabled").Value == "true";
             string IRCMessageName = IRCMessagingConfig.Attribute("name").Value == "NONE" ? null : IRCMessagingConfig.Attribute("name").Value;
 
-            return new SaveData(activeMissions, canSendIRCMessage, IRCMessageName, dnsRecords);
+
+            
+            return new SaveData(activeMissions, canSendIRCMessage, IRCMessageName, dnsRecords, choices);
         }
         public static void WriteXMODSave(string path)
         {
@@ -85,17 +112,98 @@ namespace XMOD
                 record.Add(new XAttribute("registeredBy", XMOD.DNSData[i].registeredBy));
                 dnsRecords.Add(record);
             }
+
+            XElement choices = new XElement("Choices");
+            for (int i = 0; i < ChoiceManager.choices.Count; i++)
+            {
+                XElement choice = new XElement("Choice");
+                Choice c = ChoiceManager.choices[i];
+                choice.Add(new XAttribute("id", c.id));
+                choice.Add(new XAttribute("title", c.title));
+                choice.Add(new XAttribute("description", c.description));
+                choice.Add(new XAttribute("resetAfterChoose", c.resetChoicesAtChoose));
+                choices.Add(choice);
+            }
+
             XElement IRCConfig = new XElement("IRCMessagingConfig");
             XAttribute canSendIRCMessage = new XAttribute("enabled", XMOD.sendIRCEnabled);
             XAttribute IRCMessageName = new XAttribute("name", XMOD.sendIRCName ?? "NONE");
+
             IRCConfig.Add(canSendIRCMessage);
             IRCConfig.Add(IRCMessageName);
             userSaveElement.Add(IRCConfig);
             userSaveElement.Add(dnsRecords);
+            userSaveElement.Add(choices);
 
             SaveDocument.Save(path);
         }
 
+
+        public static XConfig ReadXMOConfig(string path)
+        {
+            if (!File.Exists(path)) return null;
+            XDocument configDocument = XDocument.Load(path);
+            XElement configElement = configDocument.Element("Config");
+            List<XConnection> connections = new List<XConnection>();
+
+            if (configElement.Element("Connections") != null) {
+                List<XElement> connectionElements = configElement.Element("Connections").Elements("Connection").ToList();
+                foreach (XElement connectionElement in connectionElements)
+                {
+                    string id;
+                    string address;
+                    string route;
+                    string key;
+                    int port;
+                    if (connectionElement.Attribute("id") != null && connectionElement.Attribute("address") != null)
+                    {
+                        id = connectionElement.Attribute("id").Value;
+                        address = connectionElement.Attribute("address").Value;
+                    } else
+                    {
+                        ErrorHandler.CreateError($"One or more missing connection data. Ignoring tag.", 3, false).Emit();
+                        continue;
+                    }
+                    
+                    Dictionary<string, string> attributes = new Dictionary<string, string>();
+                    if (connectionElement.Attribute("key") != null)
+                    {
+                        key = connectionElement.Attribute("key").Value;
+                    } else
+                    {
+                        key = "";
+                    }
+                    if(connectionElement.Attribute("port") != null)
+                    {
+                        if(!int.TryParse(connectionElement.Attribute("port").Value, out port)) {
+                            ErrorHandler.CreateError($"Port must be a number. Connection id: \"{id}\". Using 8000 by default.", 1, false).Emit();
+                            port = 8000;
+                        }
+                    } else
+                    {
+                        port = 8000;
+                    }
+
+                    if(connections.Where(c => c.identifier == id).Any())
+                    {
+                        ErrorHandler.CreateError($"Duplicated connection id. First in document order will be used. Connection id: \"{id}\".", 1, false).Emit();
+                        continue;
+                    }
+
+                    List<XElement> dataFieldsElements = connectionElement.Elements("DataField").ToList();
+                    Dictionary<string,string> dataFields = new Dictionary<string,string>();
+                    foreach(XElement dataField in dataFieldsElements)
+                    {
+                        dataFields.Add(dataField.Attribute("SaveAs").Value, dataField.Attribute("Attribute").Value);
+                    }
+
+                    connections.Add(new XConnection(id, address, port, key, dataFields));
+                }
+            }
+           
+
+            return new XConfig(connections);
+        }
 
         public static Mission ReadMission(XDocument missionDoc)
         {
@@ -146,19 +254,19 @@ namespace XMOD
             switch (goalType)
             {
                 case "filedeletion":
-                    return new FileDeletionMission(goalEl.Attribute("path").Value, goalEl.Attribute("filename").Value, goalEl.Attribute("target").Value, OS.currentInstance);
+                    return new FileDeletionMission(goalEl.Attribute("path").Value, goalEl.Attribute("file").Value, goalEl.Attribute("target").Value, OS.currentInstance);
                 case "clearfolder":
                     return new FileDeleteAllMission(goalEl.Attribute("path").Value, goalEl.Attribute("target").Value, OS.currentInstance);
                 case "filedownload":
-                    return new FileDownloadMission(goalEl.Attribute("path").Value, goalEl.Attribute("filename").Value, goalEl.Attribute("target").Value, OS.currentInstance);
+                    return new FileDownloadMission(goalEl.Attribute("path").Value, goalEl.Attribute("file").Value, goalEl.Attribute("target").Value, OS.currentInstance);
                 case "filechange":
                     if (goalEl.Attribute("removal") == null)
                     {
-                        return new FileChangeMission(goalEl.Attribute("path").Value, goalEl.Attribute("filename").Value, goalEl.Attribute("target").Value, goalEl.Attribute("keyword").Value, OS.currentInstance);
+                        return new FileChangeMission(goalEl.Attribute("path").Value, goalEl.Attribute("file").Value, goalEl.Attribute("target").Value, goalEl.Attribute("keyword").Value, OS.currentInstance);
                     }
                     else
                     {
-                        return new FileChangeMission(goalEl.Attribute("path").Value, goalEl.Attribute("filename").Value, goalEl.Attribute("target").Value, goalEl.Attribute("keyword").Value, OS.currentInstance, XMOD.ConvertToBool(goalEl.Attribute("removal").Value));
+                        return new FileChangeMission(goalEl.Attribute("path").Value, goalEl.Attribute("file").Value, goalEl.Attribute("target").Value, goalEl.Attribute("keyword").Value, OS.currentInstance, XMOD.ConvertToBool(goalEl.Attribute("removal").Value));
                     }
                 case "getadmin":
                     return new GetAdminMission(goalEl.Attribute("target").Value, OS.currentInstance);
