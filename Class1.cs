@@ -26,6 +26,7 @@ namespace XMOD
         public static List<XConnection> connections;
         public static float lastDataUpdates = 0;
         public static Choice lastChoice = null;
+        public static double lastChoiceTime = 0;
         private string textFile;
         private int i;
         private string idLog;
@@ -249,6 +250,7 @@ namespace XMOD
                 else
                 {
                     lastChoice = choice;
+                    lastChoiceTime = OS.currentElapsedTime;
                     os.write("Choice made.");
                 }
             }
@@ -264,6 +266,7 @@ namespace XMOD
             LoadPorts();
 
             lastChoice = null;
+            lastChoiceTime = 0;
 
             Pathfinder.Mission.GoalManager.RegisterGoal<FileCreationGoal>("filecreation");
             
@@ -294,6 +297,7 @@ namespace XMOD
             Pathfinder.Action.ActionManager.RegisterAction<AddDNSRecord>("AddDNSRecord");
             Pathfinder.Action.ActionManager.RegisterAction<AddChoice>("AddChoice");
             Pathfinder.Action.ActionManager.RegisterAction<ShowChoices>("ShowChoices");
+            Pathfinder.Action.ActionManager.RegisterAction<RemoveChoice>("RemoveChoice");
             Pathfinder.Action.ActionManager.RegisterAction<ResetChoices>("ResetChoices");
 
             return true;

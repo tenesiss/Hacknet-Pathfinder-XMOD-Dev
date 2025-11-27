@@ -20,24 +20,17 @@ public class AddChoice : Pathfinder.Action.DelayablePathfinderAction
     [XMLStorage]
     public string description = "";
     [XMLStorage]
-    public string resetAfterChoose = "true";
+    public bool resetAfterChoose = true;
 
     override public void Trigger(OS os)
     {
-        bool rac;
-        if(resetAfterChoose == "true")
+        if(ChoiceManager.choices.Any(choice => choice.id == id))
         {
-            rac = true;
-        } else if(resetAfterChoose == "false")
-        {
-            rac = false;
+            Error err = new Error("There is already a choice with id '" + id + "'.", false, 2);
         } else
         {
-            Error err = new Error("Invalid value for \"resetAfterChoose\" attribute at choice: " + id + ". Default value will be used (true)", false, 2);
-            err.Emit();
-            rac = true;
+            Choice c = new Choice(id, title, description, resetAfterChoose);
+            ChoiceManager.choices.Add(c);
         }
-        Choice c = new Choice(id, title, description, rac);
-        ChoiceManager.choices.Add(c);
     }
 }

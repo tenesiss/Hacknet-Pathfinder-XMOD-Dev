@@ -51,6 +51,15 @@
 - Searches for a DNS record with the specified domain
 - Format: `dnscan [domain]`
 - Requires admin: No
+### List Choices
+- List all the currently available choices, along with their (numeric) ID and description
+- Format: `choices`
+- Requires admin: No
+### Choose
+- Trigger the given choice.
+- Format: `choose [choice_number]`
+- Requires admin: No
+
 
 ## Conditional Actions
 ### File Copied (FileCopied)
@@ -61,27 +70,27 @@
   - path: The path of the target comp where the file must be uploaded to
   - source: Source comp (where the file is)
   - sourcePath: The path where the file is in source comp
-  - checkOnce: If to check every frame or once
+  - checkOnce: Whether to check every frame or once.
 ### File Deleted (FileDeleted)
 - Is triggered when a file is deleted from the specified node
 - Attributes available
   - target: The target comp (where the file is)
   - targetFile: The name of the file to delete
   - path: The path where the file is in the target comp
-  - checkOnce: If to check every frame or once
+  - checkOnce: Whether to check every frame or once.
 ### File Created (FileCreated)
 - Is triggered when a file is created in the specified node
 - Attributes available
   - target: The target comp (where the file has to be created)
   - targetFile: The name that the created file must has
   - path: The path where the file must be created on
-  - checkOnce: If to check every frame or once
+  - checkOnce: Whether to check every frame or once.
 ### Has Points (HasPoints)
 - Is triggered if the player has that amount of points
 - Attributes available
    - placeholder: The placeholder of points
    - has: The condition (using operator, for example: `>=12` checks if the player has in the placeholder more than 12 or 12 points)
-   - checkOnce: If to check every frame or once
+   - checkOnce: Whether to check every frame or once.
 ### Player Sent Message (PlayerSentMessage)
 - Is triggered when the player sends a message (or sent it if considerPrevious is set to true) to the specified IRC channel.
 - Attributes available
@@ -89,7 +98,13 @@
    - content: The content that the message should have
    - considerPrevious: If set to true, previous message will also be considered and will trigger the action if player sent the message specified, if set to false, only new messages will be considered.
    - requiredFlags: You know.
-   - checkOnce: If to check every frame or once
+   - checkOnce: Whether to check every frame or once.
+### Player Has Chosen (HasChosen)
+- Is triggered when the player has chosen a given choice id. By default, it checks until a new choice is made (since the conditional action loaded).
+- Attributes available
+   - choiceId: The choice id that triggers when chosen.
+   - checkUntilChoice(?): If set to true, the condition will be checked until a new choice is made. By default it's true.
+   - checkonce(?): Whether to check every frame or once.
 
 ## Actions
 ### Add Points (AddPoints)
@@ -136,6 +151,21 @@
   - ip: The record's pointing IP
   - domain: The record's domain
   - registeredBy(?): The ip or name of the person/node that added the record, by default is "UNKNOWN"
+### AddChoice
+- Adds a possible choice to the current choices available.
+- Attributes available:
+   - id: The internal id of the choice. User will not see this.
+   - title: The title the user will see for the choice
+   - description(?): The description the user will see for the choice.
+   - resetAfterChoose(?): Clears the available choices after this one is chosen. By defualt is set to true.
+### RemoveChoice
+- Removes the choice with the given id.
+- Attributes available:
+   - id: The id of the choice to remove.
+### ShowChoices
+- Shows the available choices to the user by the terminal (as if he executed the `choices` command).
+### ResetChoices
+- Clears the available choices.
 
 ## Goals
 ### File Creation (filecreation)
@@ -150,7 +180,7 @@
 ### checkOnce Attribute
 - The checkOnce attribute is optional
 - HasFlags and DoesNotHaveFlags (from the base game) also have checkOnce attribute
-- It accepts true/false values (in string obviously)
+- It accepts true/false values
 - By default is `false`
 ### ? symbol
 - (?) in attributes refers that it's optional

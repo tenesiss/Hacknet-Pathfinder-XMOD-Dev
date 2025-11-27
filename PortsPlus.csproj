@@ -100,6 +100,7 @@
     <Compile Include="Actions\ConditionHasPoints.cs" />
     <Compile Include="Actions\ConditionalPlayerSentMessage.cs" />
     <Compile Include="Actions\LoadMissionX.cs" />
+    <Compile Include="Actions\RemoveChoice.cs" />
     <Compile Include="Actions\RemovePoints.cs" />
     <Compile Include="Actions\ResetChoices.cs" />
     <Compile Include="Actions\SendEmail.cs" />
